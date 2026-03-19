@@ -5,22 +5,28 @@
   gtag('js', new Date());
 
   gtag('config', 'G-L7856P3VNT');
-</script><!DOCTYPE html>
-<html lang="en-us">
+</script><html>
   <head>
     
     
     
-    <script src="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/backrooms/js/main.js"></script>
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Backrooms</title>
-    <link rel="icon" href="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/backrooms/img/icon.png" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/backrooms/TemplateData/style.css" />
-    <script src="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/backrooms/TemplateData/UnityProgress.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/backrooms/Build/UnityLoader.js"></script>
+    <base href="https://rawcdn.githack.com/genizy/assets/78f01b889b5f57c1bc0f260a38d5eabf51923f40/baldis-basics/">
+    <title>Baldi's Basics</title>
+    <link rel="icon" type="image/png" href="/favicon.ico" />
+    <script type="text/javascript" src="/js/main.js"></script>
+
+    <link rel="stylesheet" href="TemplateData/style.css" />
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="baldi.js"></script>
     <script>
-      var gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/backrooms/Build/WebGL.json", { onProgress: UnityProgress });
+      var gameInstance = UnityLoader.instantiate("gameContainer", "baldi.json", {
+        onProgress: UnityProgress,
+        Module: {
+          onRuntimeInitialized: function () {
+            UnityProgress(gameInstance, "complete");
+          },
+        },
+      });
     </script>
   <style>
 #sidebarad1,
@@ -63,14 +69,12 @@
 }
 </style>
 </head>
-  <body>
+  <body style="margin: 0;">
     <div class="webgl-content">
-      <div id="gameContainer" style="width: 960px; height: 600px;"></div>
-      <div class="footer">
-        <div class="webgl-logo"></div>
-        <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
-        <div class="title">Backrooms</div>
+      <div id="unityContainer" style="width: 960px; height: 600px; padding: 0px; margin: 0px; border: 0px; position: relative; background: rgb(35, 31, 32);">
+        <div id="gameContainer" style="width: 800px; height: 560px; margin: auto;"></div>
       </div>
+      <script src="firebase-app.js"></script>
     </div>
   <div id="sidebarad1">
   <div class="sidebar-close" onclick="this.parentElement.style.display='none'">✕</div>

@@ -6,26 +6,22 @@
 
   gtag('config', 'G-L7856P3VNT');
 </script><!DOCTYPE html>
-<html lang="en">
+<html lang="en-us">
   <head>
     
     
     
-    <link rel="manifest" href="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/wordle/manifest.json" />
-    <link rel="icon" href="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/wordle/img/logo_32x32.png" type="image/x-icon" />
-    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/wordle/img/logo_32x32.png" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/wordle/img/logo_192x192.png" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/wordle/global.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/wordle/build/bundle.css" />
+    <script src="https://cdn.jsdelivr.net/gh/genizy/assets@main/backrooms/js/main.js"></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Backrooms</title>
+    <link rel="icon" href="https://cdn.jsdelivr.net/gh/genizy/assets@main/backrooms/img/icon.png" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/genizy/assets@main/backrooms/TemplateData/style.css" />
+    <script src="https://cdn.jsdelivr.net/gh/genizy/assets@main/backrooms/TemplateData/UnityProgress.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/genizy/assets@main/backrooms/Build/UnityLoader.js"></script>
     <script>
-      // PWA Service worker
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("sw.js");
-      }
+      var gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/genizy/assets@main/backrooms/Build/WebGL.json", { onProgress: UnityProgress });
     </script>
-    <script src="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/wordle/js/main.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/gh/WhoIsEv/relivedassets@main/wordle/build/bundle.js"></script>
-    <title>Wordle</title>
   <style>
 #sidebarad1,
 #sidebarad2 {
@@ -67,7 +63,16 @@
 }
 </style>
 </head>
-  <body><div id="sidebarad1">
+  <body>
+    <div class="webgl-content">
+      <div id="gameContainer" style="width: 960px; height: 600px;"></div>
+      <div class="footer">
+        <div class="webgl-logo"></div>
+        <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
+        <div class="title">Backrooms</div>
+      </div>
+    </div>
+  <div id="sidebarad1">
   <div class="sidebar-close" onclick="this.parentElement.style.display='none'">✕</div>
 </div>
 <div id="sidebarad2">

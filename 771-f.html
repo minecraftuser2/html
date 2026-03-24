@@ -204,8 +204,9 @@ async function isCached() {
 /* ================= MAIN ================= */
 (async () => {
   try {
+    let webglzip = null;
     if (!(await isCached())) {
-      const webglzip = await mergeFiles(
+      webglzip = await mergeFiles(
         getParts("StreamingAssets/aa/WebGL.zip", 1, 100)
       );
 

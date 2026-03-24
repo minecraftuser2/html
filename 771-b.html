@@ -70,9 +70,9 @@
     <script src="jszip.js"></script>
 
 <script>
-const fileStore = {};
 const loadingText = document.querySelector("#loading-text");
-const CACHE_NAME = "hksilksongcache"
+const CACHE_NAME = "hksilksongcache-v2"; // bump version if needed
+
 /* ================= FETCH OVERRIDE ================= */
 const originalFetch = window.fetch;
 
@@ -82,18 +82,40 @@ window.fetch = async function(resource, options) {
 
   const cache = await caches.open(CACHE_NAME);
 
-  // ✅ Check cache first
   const cachedResponse = await cache.match(cleanPath);
   if (cachedResponse) {
     return cachedResponse;
   }
 
-  // fallback to normal fetch
   return originalFetch(resource, options);
 };
 
+/* ================= CACHE CHECK ================= */
+async function isCached() {
+  const cache = await caches.open(CACHE_NAME);
+  const done = await cache.match("CACHE_COMPLETE");
+  return !!done;
+}
+
+async function cleanupOldCaches() {
+  const cacheNames = await caches.keys();
+
+  await Promise.all(
+    cacheNames.map(name => {
+      if (name !== CACHE_NAME && name.includes("hksilksong")) {
+        console.log("Deleting old cache:", name);
+        return caches.delete(name);
+      }
+    })
+  );
+}
+
 /* ================= UNZIP ================= */
 async function unzipAndStore(zipBlob) {
+  if (!zipBlob) {
+    throw new Error("ZIP is missing");
+  }
+
   loadingText.textContent = "EXTRACTING ASSETS...";
 
   const zip = await JSZip.loadAsync(zipBlob);
@@ -111,13 +133,9 @@ async function unzipAndStore(zipBlob) {
     await Promise.all(batch.map(async (file) => {
       try {
         const blob = await file.async("blob");
-
-        // ✅ Store in cache
-        const response = new Response(blob);
-        await cache.put(file.name, response);
-
+        await cache.put(file.name, new Response(blob));
       } catch (e) {
-        console.error("Failed to extract:", file.name, e);
+        console.error("Failed:", file.name, e);
       }
 
       processed++;
@@ -128,14 +146,17 @@ async function unzipAndStore(zipBlob) {
     await new Promise(r => setTimeout(r, 0));
   }
 
-  console.log("Cached all files");
+  // ✅ mark cache complete
+  await cache.put("CACHE_COMPLETE", new Response("ok"));
+
+  console.log("Cache complete");
 }
 
 /* ================= DOWNLOAD ================= */
 let loadedBytes = 0;
 
 async function fetchWithProgress(url) {
-  const response = await fetch(url);
+  const response = await originalFetch(url);
 
   if (!response.ok) {
     throw new Error("Failed to fetch: " + url);
@@ -179,11 +200,7 @@ async function mergeFiles(parts) {
     parts.map(part => fetchWithProgress(part))
   );
 
-  const blob = new Blob(buffers);
-
-  console.log("Merged ZIP size (MB):", (blob.size / 1024 / 1024).toFixed(2));
-
-  return blob;
+  return new Blob(buffers);
 }
 
 /* ================= UTIL ================= */
@@ -195,18 +212,14 @@ function getParts(file, start, end) {
   return parts;
 }
 
-async function isCached() {
-  const cache = await caches.open(CACHE_NAME);
-  const keys = await cache.keys();
-  return keys.length > 0;
-}
-
 /* ================= MAIN ================= */
 (async () => {
   try {
-    let webglzip = null;
+    await cleanupOldCaches(); 
     if (!(await isCached())) {
-      webglzip = await mergeFiles(
+      loadingText.textContent = "DOWNLOADING ASSETS...";
+
+      const webglzip = await mergeFiles(
         getParts("StreamingAssets/aa/WebGL.zip", 1, 100)
       );
 
@@ -214,8 +227,6 @@ async function isCached() {
     } else {
       loadingText.textContent = "LOADING FROM CACHE...";
     }
-
-    await unzipAndStore(webglzip);
 
     /* ================= UNITY START ================= */
     const canvas = document.querySelector("#unity-canvas");

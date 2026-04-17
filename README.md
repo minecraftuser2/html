@@ -1,1 +1,2 @@
 IM GONNA FIX GN-MATH ONCE AND FOR ALL
+deltarune and undertale added back
